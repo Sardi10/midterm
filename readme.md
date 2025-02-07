@@ -1,1 +1,1 @@
-Some changes here!
+After oppening the project, press pytest --pylint --cov
