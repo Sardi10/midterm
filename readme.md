@@ -1,62 +1,66 @@
 Calculator Assignment Requirements Mapping
 ============================================
 
-Requirement 1 (20 Points): Arithmetic Operations (Add, Subtract, Multiply, Divide)
--------------------------------------------------------------------------
-- File: calculator/calculator.py
-  • Lines ~3-17: 
-    - The static methods add, subtract, multiply, and divide are implemented.
-    - Each method creates a Calculation instance and calls its perform() method.
+Requirement 1 (30 Points): Faker Integration
+---------------------------------------------------------
+File: requirements.txt
+  • Faker is installed via "pip install faker" and appears in requirements.txt
+    after running "pip freeze > requirements.txt".
 
-Requirement 2 (10 Points): Exception Throwing and Testing for Divide-by-Zero
--------------------------------------------------------------------------
-- File: calculator/calculation.py
-  • Lines ~15-19:
-    - In the perform() method, when the operator is '/' and operand2 is zero,
-      a ZeroDivisionError is raised.
-- File: tests/test_calculator.py
-  • Lines ~35-39:
-    - The test_divide_by_zero function uses pytest.raises(ZeroDivisionError)
-      to verify that dividing by zero raises an exception.
+File: tests/test_faker.py • Lines ~1-9:
+  • Lines 1-2: Import Faker and the Calculator class.
+  • Lines 3-9: A test (test_faker_addition) creates a Faker() instance, generates random integers,
+    computes the expected sum, and asserts that Calculator.add returns the correct result.
 
-Requirement 3 (30 Points Each): Use of Static, Class, and Instance Methods
--------------------------------------------------------------------------
-- Static Methods:
-  • File: calculator/calculator.py
-    - Lines ~3-17: The add, subtract, multiply, and divide methods are declared as static.
-- Instance Methods:
-  • File: calculator/calculation.py
-    - Lines ~3-10: The __init__ method and perform() method are instance methods for the Calculation class.
-  • File: calculator/calculations.py
-    - Lines ~3-7: The __init__ method initializes the history list (instance-level data).
-- Class Method:
-  • File: calculator/calculations.py
-    - Lines ~21-29: The from_operations method is implemented as a class method to create a Calculations instance from a list of operations.
+Requirement 2 (30 Points): Test Data Generation using Pytest Command-Line Option
+---------------------------------------------------------
+File: tests/conftest.py • Lines ~1-37:
+  • Lines 1-8: Defines pytest_addoption to add the "--num_records" command-line option.
+  • Lines 10-37: Implements the fake_records fixture that uses Faker to generate a list of test records
+    (tuples with two numbers, an operator, and the expected result) based on the --num_records value.
 
-Requirement 4 (5 Points): Calculation Class Storing the Arithmetic Operation
--------------------------------------------------------------------------
-- File: calculator/calculation.py
-  • Lines ~3-10:
-    - The __init__ method stores operand1, operand2, and operator as instance properties,
-      along with initializing the result property.
+File: tests/test_generated_data.py • Lines ~1-16:
+  • Lines 1-4: Defines a test (test_generated_records_structure) that uses the fake_records fixture.
+  • Lines 5-16: Verifies that each generated record is a tuple of 4 elements, and that each element meets
+    the expected type and value constraints.
 
-Requirement 5 (15 Points): Calculation History to Store Calculation Instances
--------------------------------------------------------------------------
-- File: calculator/calculations.py
-  • Lines ~3-7:
-    - The __init__ method initializes a history list (self.history) to store Calculation objects.
+(Optional)
+File: tests/test_conftest_extras.py • Lines ~1-20:
+  • Additional tests simulate scenarios (e.g., num_records=0 and forcing an exception branch)
+    to ensure all branches in the fake_records fixture are executed, helping achieve 100% coverage.
 
-Requirement 6 (10 Points): Convenience Methods on the Calculations Class to Manage History
--------------------------------------------------------------------------
-- File: calculator/calculations.py
-  • Lines ~9-19:
-    - Methods add_calculation (adds a Calculation instance),
-      get_last (retrieves the most recent calculation), and clear_history (clears the history)
-      provide convenient history management.
+Requirement 3 (40 Points): User Input Handling via Command-Line Application
+---------------------------------------------------------
+File: main.py • Lines ~1-40:
+  • Lines 1-3: Imports necessary modules and Calculator classes.
+  • Lines ~5-14: The parse_args function converts command-line arguments (a, b, and operation) into proper types,
+    raising an error for invalid input.
+  • Lines ~16-29: The perform_operation function maps the operation string to the corresponding Calculator method,
+    handling errors such as divide-by-zero and unknown operations.
+  • Lines ~31-38: The main() function calls parse_args and perform_operation, printing the result or an error message.
 
-Requirement 7 (10 Points): Using Parameterized Test Data
--------------------------------------------------------------------------
-- File: tests/test_calculator.py
-  • Lines ~3-7 (and similar blocks for each operation):
-    - The @pytest.mark.parametrize decorators are used to supply multiple data sets for tests
-      on add, subtract, multiply, and divide operations.
+============================================================
+Testing Instructions
+============================================================
+1. Run all tests (with fake records generated):
+   - Command: 
+     pytest --num_records=100
+     
+2. Run tests with output (disable capturing):
+   - Command:
+     pytest --num_records=100 -s
+     
+3. Check test coverage:
+   - Command:
+     coverage run -m pytest --num_records=100
+     coverage report -m
+     
+4. Test the command-line application (User Input Handling):
+   - Example Commands:
+     python main.py 5 3 add
+     python main.py 1 0 divide
+     python main.py 9 3 unknown
+     python main.py a 3 add
+     python main.py 5 b subtract
+
+============================================================
