@@ -42,7 +42,7 @@ def perform_operation(a, b, operation):
 
 def main():
     try:
-        # Exclude the script name and parse arguments
+        # Exclude the script name and Parse arguments
         a, b, operation = parse_args(sys.argv[1:])
         result = perform_operation(a, b, operation)
         print(f"The result of {int(a)} {operation} {int(b)} is equal to {result}")
