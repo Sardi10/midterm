@@ -39,9 +39,9 @@ File: main.py • Lines ~1-40:
     handling errors such as divide-by-zero and unknown operations.
   • Lines ~31-38: The main() function calls parse_args and perform_operation, printing the result or an error message.
 
-============
+========================
 Testing Instructions
-============
+========================
 
 1. Run all tests (with fake records generated):
    - Command: 
