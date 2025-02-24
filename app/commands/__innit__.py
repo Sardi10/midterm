@@ -1,4 +1,4 @@
-# app/commands/__init__.py
+#  app/commands/__init__.py
 from abc import ABC, abstractmethod
 
 class Command(ABC):
