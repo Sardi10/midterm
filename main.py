@@ -1,4 +1,5 @@
 # main.py
+from app import App   
 import sys
 from calculator.calculator import Calculator
 from calculator.calculation import Calculation
@@ -50,4 +51,6 @@ def main():
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    main()
+
+    app = App()
+    app.start()

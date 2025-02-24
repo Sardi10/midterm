@@ -21,7 +21,7 @@ class App:
         self.command_handler.register_command("menu", MenuCommand())
         self.command_handler.register_command("exit", ExitCommand())
 
-        print("Type 'exit' to exit.")
+        print("Type 'exit' to exit or 'menu' to enter menu section.")
         while True:
             cmd_input = input(">>> ").strip().split()
             if not cmd_input:
