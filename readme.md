@@ -1,66 +1,56 @@
-Calculator Assignment Requirements Mapping
-============================================
+Command Pattern and Plugins Homework 5 Requirements Mapping
+============================================================
 
-Requirement 1 (30 Points): Faker Integration
----------------------------------------------------------
-File: requirements.txt
-  • Faker is installed via "pip install faker" and appears in requirements.txt
-    after running "pip freeze > requirements.txt".
+Requirement 1 (10 Points): Implementation of Command Pattern and REPL
+---------------------------------------------------------------------
+File: app/commands/__init__.py • Lines ~1-20:
+  • Lines ~1-10: Defines the abstract Command base class using the ABC module.
+  • Lines ~11-20: Implements the CommandHandler class that registers and executes commands.
+File: app/__init__.py • Lines ~1-20:
+  • Lines ~1-5: Imports CommandHandler and command plugins.
+  • Lines ~6-20: The App class is defined, which initializes CommandHandler, registers commands,
+                 and implements the REPL loop (Read, Evaluate, Print, Loop) to process user input.
 
-File: tests/test_faker.py • Lines ~1-9:
-  • Lines 1-2: Import Faker and the Calculator class.
-  • Lines 3-9: A test (test_faker_addition) creates a Faker() instance, generates random integers,
-    computes the expected sum, and asserts that Calculator.add returns the correct result.
+Requirement 2 (20 Points): Interactive Calculator Commands (add, subtract, multiply, divide)
+---------------------------------------------------------------------------------------------
+File: app/commands/add/add_command.py • Lines ~1-15:
+  • Lines ~1-2: Imports the Command base class and Calculator class.
+  • Lines ~3-15: Implements AddCommand with an execute() method that parses two numeric arguments,
+                 calls Calculator.add(), and prints the formatted result.
+File: app/commands/subtract/subtract_command.py • Lines ~1-15:
+  • Implements SubtractCommand similarly, using Calculator.subtract().
+File: app/commands/multiply/multiply_command.py • Lines ~1-15:
+  • Implements MultiplyCommand similarly, using Calculator.multiply().
+File: app/commands/divide/divide_command.py • Lines ~1-20:
+  • Implements DivideCommand with proper error handling for division by zero, using Calculator.divide().
 
-Requirement 2 (30 Points): Test Data Generation using Pytest Command-Line Option
----------------------------------------------------------
-File: tests/conftest.py • Lines ~1-37:
-  • Lines 1-8: Defines pytest_addoption to add the "--num_records" command-line option.
-  • Lines 10-37: Implements the fake_records fixture that uses Faker to generate a list of test records
-    (tuples with two numbers, an operator, and the expected result) based on the --num_records value.
-
-File: tests/test_generated_data.py • Lines ~1-16:
-  • Lines 1-4: Defines a test (test_generated_records_structure) that uses the fake_records fixture.
-  • Lines 5-16: Verifies that each generated record is a tuple of 4 elements, and that each element meets
-    the expected type and value constraints.
-
-(Optional)
-File: tests/test_conftest_extras.py • Lines ~1-20:
-  • Additional tests simulate scenarios (e.g., num_records=0 and forcing an exception branch)
-    to ensure all branches in the fake_records fixture are executed, helping achieve 100% coverage.
-
-Requirement 3 (40 Points): User Input Handling via Command-Line Application
----------------------------------------------------------
-File: main.py • Lines ~1-40:
-  • Lines 1-3: Imports necessary modules and Calculator classes.
-  • Lines ~5-14: The parse_args function converts command-line arguments (a, b, and operation) into proper types,
-    raising an error for invalid input.
-  • Lines ~16-29: The perform_operation function maps the operation string to the corresponding Calculator method,
-    handling errors such as divide-by-zero and unknown operations.
-  • Lines ~31-38: The main() function calls parse_args and perform_operation, printing the result or an error message.
+Requirement 3 (20 Points): Successful Plugin Architecture Integration for Dynamic Command Loading
+-----------------------------------------------------------------------------------------------
+File: app/__init__.py • Lines ~21-40:
+  • Lines ~21-30: Registers command plugins (add, subtract, multiply, divide, menu, exit)
+                 with the CommandHandler.
+File: Entire app/commands/ folder structure:
+  • Each subfolder (add, subtract, multiply, divide, menu, exit) contains an __init__.py file
+    and a corresponding command implementation file, demonstrating a modular plugin architecture.
 
 ============================================================
 Testing Instructions
 ============================================================
-1. Run all tests (with fake records generated):
-   - Command: 
-     pytest --num_records=100
-     
-2. Run tests with output (disable capturing):
-   - Command:
-     pytest --num_records=100 -s
-     
-3. Check test coverage:
-   - Command:
-     coverage run -m pytest --num_records=100
-     coverage report -m
-     
-4. Test the command-line application (User Input Handling):
-   - Example Commands:
-     python main.py 5 3 add
-     python main.py 1 0 divide
-     python main.py 9 3 unknown
-     python main.py a 3 add
-     python main.py 5 b subtract
+1. Run all tests:
+   Command: pytest
+            pytest main.py
 
+2. Check test coverage:
+   Command: coverage run -m pytest --num_records=100
+            coverage report -m
+
+3. Run the interactive application:
+   Command: python main.py
+   - At the prompt, test commands such as:
+       add 5 3         -> Should output: "The result of 5 add 3 is equal to 8"
+       subtract 10 2   -> Should output: "The result of 10 subtract 2 is equal to 8"
+       multiply 4 5    -> Should output: "The result of 4 multiply 5 is equal to 20"
+       divide 20 4     -> Should output: "The result of 20 divide 4 is equal to 5"
+       menu            -> Displays the available commands
+       exit            -> Exits the application
 ============================================================
