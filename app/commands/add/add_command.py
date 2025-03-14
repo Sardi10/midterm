@@ -1,8 +1,7 @@
-# app/commands/add/add_command.py
 import logging
 from app.commands import Command
-from calculator.calculation import Calculation
 from calculator.history_manager import HistoryManager
+from calculator.calculation_factory import CalculationFactory
 
 class AddCommand(Command):
     def execute(self, args):
@@ -13,16 +12,16 @@ class AddCommand(Command):
         try:
             a = float(args[0])
             b = float(args[1])
+            # Instead of calling Calculator.add() directly, we'll create a Calculation object
+            calc = CalculationFactory.create_calculation(a, b, '+')
+            #calc = Calculation(a, b, '+')
+            result = calc.perform()
 
-            # Create a Calculation object for addition
-            calc = Calculation(a, b, '+')
-            calc.perform()
-
-            # Store the Calculation in the Pandas-based history
+            # NOW we add the Calculation to the history
             HistoryManager().add_calculation(calc)
 
-            logging.info("AddCommand executed with a=%s, b=%s. Result: %s", a, b, calc.result)
-            print(f"The result of {int(a)} add {int(b)} is equal to {calc.result}")
+            logging.info("AddCommand executed with a=%s, b=%s. Result: %s", a, b, result)
+            print(f"The result of {int(a)} add {int(b)} is equal to {result}")
         except ValueError:
             logging.exception("Invalid input for AddCommand: %s", args)
             print(f"Invalid number input: {args[0]} or {args[1]} is not a valid number.")
