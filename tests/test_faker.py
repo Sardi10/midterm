@@ -10,3 +10,4 @@ def test_faker_addition():
     expected = a + b
     result = Calculator.add(float(a), float(b))
     assert result == expected
+
