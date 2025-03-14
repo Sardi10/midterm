@@ -1,4 +1,3 @@
-# main.py
 import os
 import sys
 import logging
@@ -11,9 +10,12 @@ from calculator.calculation import Calculation
 # 1. Load environment variables from the .env file
 load_dotenv()
 
-# 2. Configure logging
+# 2. Configure logging with dynamic level
+#    If LOG_LEVEL is not set in the environment, default to INFO
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=log_level,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler()]  # Logs to console
 )
@@ -21,14 +23,13 @@ logging.basicConfig(
 def parse_args(args):
     """
     Parses the command-line arguments.
-    Expected arguments: a, b, operation
+    Expected arguments: a, b, and operation
     Returns a tuple (a, b, operation) with a and b as floats if valid.
     """
     if len(args) != 3:
         raise ValueError("Please provide exactly three arguments: a, b, and operation.")
 
     a_str, b_str, operation = args
-
     try:
         a = float(a_str)
         b = float(b_str)
