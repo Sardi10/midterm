@@ -1,7 +1,7 @@
 # app/commands/history/history_save_command.py
 import logging
 from app.commands import Command
-from calculator.history_manager import HistoryManager
+from calculator.history_facade import HistoryFacade
 
 COMMAND_NAME = "history_save"
 
@@ -13,8 +13,9 @@ class HistorySaveCommand(Command):
             return
         filename = args[0]
         try:
-            HistoryManager().save_history(filename)
-            print(f"History saved to {filename}.")
+            output = HistoryFacade().save_history(filename)
+            print(output)
+            logging.info("History saved successfully.")
         except Exception as e:
             logging.exception("Failed to save history:")
             print(f"Error saving history: {e}")
