@@ -1,6 +1,7 @@
 # tests/test_app.py
 import pytest
 from app import App
+from app.commands.exit.exit_command import ExitCommand
 
 def test_app_start_exit_command(capfd, monkeypatch):
     """Test that the REPL exits correctly on 'exit' command."""
@@ -9,6 +10,24 @@ def test_app_start_exit_command(capfd, monkeypatch):
     with pytest.raises(SystemExit) as e:
         app.start()
     assert e.type == SystemExit
+    
+def test_exit_command_unexpected_arguments(capfd, caplog):
+    command = ExitCommand()
+    # Call the command with unexpected arguments
+    with pytest.raises(SystemExit) as excinfo:
+        command.execute(["unexpected_arg"])
+    
+    # Capture printed output
+    out, err = capfd.readouterr()
+    # Check that the output contains the expected message
+    assert "Exiting..." in out
+    
+    # Check that a warning about unexpected arguments was logged
+    warning_logged = any("ExitCommand received unexpected arguments:" in record.message for record in caplog.records)
+    assert warning_logged, "Expected a warning log for unexpected arguments, but none was found."
+    
+    # Check that the exit message is as expected
+    assert excinfo.value.code == "Exiting..."
 
 def test_app_start_unknown_command(capfd, monkeypatch):
     """Test handling of an unknown command before exiting."""
