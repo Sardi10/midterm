@@ -1,25 +1,16 @@
 # app/__init__.py
 from app.commands import CommandHandler
-from app.commands.add.add_command import AddCommand
-from app.commands.subtract.subtract_command import SubtractCommand
-from app.commands.multiply.multiply_command import MultiplyCommand
-from app.commands.divide.divide_command import DivideCommand
-from app.commands.menu.menu_command import MenuCommand
-from app.commands.exit.exit_command import ExitCommand
+from app.commands.plugin_loader import load_plugins
 
 class App:
     def __init__(self):
         self.command_handler = CommandHandler()
 
     def start(self):
-        # Register arithmetic commands
-        self.command_handler.register_command("add", AddCommand())
-        self.command_handler.register_command("subtract", SubtractCommand())
-        self.command_handler.register_command("multiply", MultiplyCommand())
-        self.command_handler.register_command("divide", DivideCommand())
-        # Register additional commands
-        self.command_handler.register_command("menu", MenuCommand())
-        self.command_handler.register_command("exit", ExitCommand())
+        # Dynamically load command plugins from app/commands
+        plugins = load_plugins()
+        for command_name, command_instance in plugins.items():
+            self.command_handler.register_command(command_name, command_instance)
 
         print("Type 'exit' to exit or 'menu' to enter menu section.")
         while True:
