@@ -1,7 +1,6 @@
 """Module providing a function python version."""
 # tests/test_history_facade.py
 import pandas as pd
-import pytest
 from calculator.history_facade import HistoryFacade
 
 def test_show_history_empty():
@@ -42,12 +41,12 @@ def test_save_history(monkeypatch):
     The actual save operation is overridden to avoid file I/O.
     """
     facade = HistoryFacade()
-    
+
     # Override the save_history method on the history_manager to do nothing.
     def fake_save_history(filename):
-        pass
+        _ = filename
     monkeypatch.setattr(facade.history_manager, "save_history", fake_save_history)
-    
+
     filename = "test.csv"
     result = facade.save_history(filename)
     assert result == f"History saved to {filename}."
@@ -58,12 +57,12 @@ def test_load_history(monkeypatch):
     The actual load operation is overridden to avoid file I/O.
     """
     facade = HistoryFacade()
-    
+
     # Override the load_history method on the history_manager to do nothing.
     def fake_load_history(filename):
-        pass
+        _ = filename
     monkeypatch.setattr(facade.history_manager, "load_history", fake_load_history)
-    
+
     filename = "test.csv"
     result = facade.load_history(filename)
     assert result == f"History loaded from {filename}."
@@ -74,10 +73,10 @@ def test_clear_history(monkeypatch):
     The actual clear operation is overridden.
     """
     facade = HistoryFacade()
-    
+
     def fake_clear_history():
         pass
     monkeypatch.setattr(facade.history_manager, "clear_history", fake_clear_history)
-    
+
     result = facade.clear_history()
     assert result == "History cleared."

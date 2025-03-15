@@ -1,3 +1,4 @@
+"""Module providing a function python version."""
 # tests/test_history_manager.py
 import os
 import pandas as pd

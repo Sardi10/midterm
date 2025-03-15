@@ -1,6 +1,5 @@
 """Module providing a function python version."""
 # tests/test_history_clear_command.py
-import pytest
 from app.commands.history.history_clear_command import HistoryClearCommand
 
 def test_history_clear_command_success(capfd, caplog):
@@ -10,17 +9,18 @@ def test_history_clear_command_success(capfd, caplog):
     """
     # Set caplog to capture INFO-level logs
     caplog.set_level("INFO")
-    
+
     command = HistoryClearCommand()
     # Execute the command with no arguments
     command.execute([])
-    
+
     # Capture printed output
     out, _ = capfd.readouterr()
     assert "History cleared." in out, f"Expected output 'History cleared.' not found; got: {out}"
-    
+
     # Verify that an info log was generated
-    info_logged = any("History cleared successfully." in record.message for record in caplog.records)
+    info_logged = any("History cleared successfully." in record.message
+                      for record in caplog.records)
     assert info_logged, "Expected log message 'History cleared successfully.' not found."
 
 def test_history_clear_command_failure(monkeypatch, capfd, caplog):
@@ -30,18 +30,18 @@ def test_history_clear_command_failure(monkeypatch, capfd, caplog):
     """
     # Define a fake clear_history method that always raises an exception
     def fake_clear_history(self):
-        raise Exception("Test Exception")
-    
+        raise ValueError("Test Exception")
+
     # Monkeypatch the clear_history method in HistoryFacade
     monkeypatch.setattr("calculator.history_facade.HistoryFacade.clear_history", fake_clear_history)
-    
+
     command = HistoryClearCommand()
     command.execute([])
-    
+
     # Capture printed output
     out, _ = capfd.readouterr()
     assert "Error clearing history: Test Exception" in out, "Expected error message not printed."
-    
+
     # Verify that an exception log was generated
     error_logged = any("Failed to clear history:" in record.message for record in caplog.records)
     assert error_logged, "Expected exception log not found."

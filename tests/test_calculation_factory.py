@@ -1,3 +1,4 @@
+"""Module providing a function python version."""
 # tests/test_calculation_factory.py
 import pytest
 from calculator.calculation_factory import CalculationFactory

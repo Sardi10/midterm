@@ -1,3 +1,4 @@
+"""Module providing a function python version."""
 # tests/test_app.py
 import pytest
 from app import App
@@ -10,22 +11,24 @@ def test_app_start_exit_command(capfd, monkeypatch):
     with pytest.raises(SystemExit) as e:
         app.start()
     assert e.type == SystemExit
-    
+
 def test_exit_command_unexpected_arguments(capfd, caplog):
+    """Test that command exits unexpectedly"""
     command = ExitCommand()
     # Call the command with unexpected arguments
     with pytest.raises(SystemExit) as excinfo:
         command.execute(["unexpected_arg"])
-    
+
     # Capture printed output
     out, err = capfd.readouterr()
     # Check that the output contains the expected message
     assert "Exiting..." in out
-    
+
     # Check that a warning about unexpected arguments was logged
-    warning_logged = any("ExitCommand received unexpected arguments:" in record.message for record in caplog.records)
+    warning_logged = any("ExitCommand received unexpected arguments:" 
+                         in record.message for record in caplog.records)
     assert warning_logged, "Expected a warning log for unexpected arguments, but none was found."
-    
+
     # Check that the exit message is as expected
     assert excinfo.value.code == "Exiting..."
 
@@ -40,6 +43,7 @@ def test_app_start_unknown_command(capfd, monkeypatch):
     assert "No such command: unknown_command" in captured.out
 
 def test_menu_command(capfd, monkeypatch):
+    """Testing Menu Command"""
     # Simulate user typing 'menu' then 'exit'
     inputs = iter(['menu', 'exit'])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
@@ -58,14 +62,15 @@ def test_menu_command(capfd, monkeypatch):
     assert "Commands should be in this format: add 5 3" in out
 
 def test_empty_input_triggers_continue(monkeypatch, capfd):
+    """Testing empty input string"""
     # Create an iterator that returns an empty string first, then "exit"
     inputs = iter(["", "exit"])
     monkeypatch.setattr('builtins.input', lambda prompt="": next(inputs))
-    
+
     # Expect that eventually the app will exit when "exit" is encountered
     with pytest.raises(SystemExit):
         App().start()
-    
+
     # Optionally, capture output to verify behavior
     out, err = capfd.readouterr()
     # You could assert that the REPL prompt was shown at least once, but the main point is

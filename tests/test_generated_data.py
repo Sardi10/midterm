@@ -7,7 +7,7 @@ def test_generated_records(fake_records):
     """
     # Ensure fake_records is a list
     assert isinstance(fake_records, list)
-    
+
     if fake_records:
         for record in fake_records:
             # Each record should be a tuple of (a, b, op, expected)
