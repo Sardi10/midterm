@@ -1,6 +1,5 @@
 """Module providing a function python version."""
 # tests/test_history_show_command.py
-import pytest
 from app.commands.history.history_show_command import HistoryShowCommand
 
 def test_history_show_command_success(monkeypatch, capfd, caplog):
@@ -12,6 +11,7 @@ def test_history_show_command_success(monkeypatch, capfd, caplog):
 
     # Override HistoryFacade.show_history to simulate a successful output.
     def fake_show_history(self):
+        _ = self
         return "Fake history: record1, record2"
 
     monkeypatch.setattr("calculator.history_facade.HistoryFacade.show_history", fake_show_history)
@@ -21,8 +21,9 @@ def test_history_show_command_success(monkeypatch, capfd, caplog):
 
     # Capture printed output
     out, _ = capfd.readouterr()
-    assert "Fake history: record1, record2" in out, f"Output did not contain expected text; got: {out}"
-
+    assert "Fake history: record1, record2" in out, (
+    f"Output did not contain expected text; got: {out}"
+    )
     # Verify that an info log was generated.
     info_logged = any("History shown successfully." in record.message for record in caplog.records)
     assert info_logged, "Expected info log message 'History shown successfully.' not found."
@@ -35,7 +36,7 @@ def test_history_show_command_failure(monkeypatch, capfd, caplog):
     caplog.set_level("ERROR")
 
     def fake_show_history(self):
-        raise Exception("Test show error")
+        raise ValueError("Test show error")
 
     monkeypatch.setattr("calculator.history_facade.HistoryFacade.show_history", fake_show_history)
 
@@ -44,7 +45,8 @@ def test_history_show_command_failure(monkeypatch, capfd, caplog):
 
     # Capture printed output
     out, _ = capfd.readouterr()
-    assert "Error showing history: Test show error" in out, f"Expected error message not found; got: {out}"
-
+    assert "Error showing history: Test show error" in out, (
+        f"Expected error message not found; got: {out}"
+    )
     error_logged = any("Failed to show history:" in record.message for record in caplog.records)
     assert error_logged, "Expected error log message for failure not found."

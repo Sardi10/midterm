@@ -6,6 +6,7 @@ from app.commands.exit.exit_command import ExitCommand
 
 def test_app_start_exit_command(capfd, monkeypatch):
     """Test that the REPL exits correctly on 'exit' command."""
+    _ = capfd
     monkeypatch.setattr('builtins.input', lambda _: 'exit')
     app = App()
     with pytest.raises(SystemExit) as e:
@@ -20,12 +21,12 @@ def test_exit_command_unexpected_arguments(capfd, caplog):
         command.execute(["unexpected_arg"])
 
     # Capture printed output
-    out, err = capfd.readouterr()
+    out, _ = capfd.readouterr()
     # Check that the output contains the expected message
     assert "Exiting..." in out
 
     # Check that a warning about unexpected arguments was logged
-    warning_logged = any("ExitCommand received unexpected arguments:" 
+    warning_logged = any("ExitCommand received unexpected arguments:"
                          in record.message for record in caplog.records)
     assert warning_logged, "Expected a warning log for unexpected arguments, but none was found."
 
@@ -54,7 +55,7 @@ def test_menu_command(capfd, monkeypatch):
         my_app.start()
 
     # Capture all printed output
-    out, err = capfd.readouterr()
+    out, _ = capfd.readouterr()
 
     # Verify that the "menu" command actually printed something
     # Adjust this string to match exactly what your menu_command.py prints
@@ -72,6 +73,6 @@ def test_empty_input_triggers_continue(monkeypatch, capfd):
         App().start()
 
     # Optionally, capture output to verify behavior
-    out, err = capfd.readouterr()
+    _out, _ = capfd.readouterr()
     # You could assert that the REPL prompt was shown at least once, but the main point is
     # that the empty input branch (continue) was executed.
