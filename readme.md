@@ -90,6 +90,6 @@ This project is an advanced Python-based calculator application developed for th
        exit            -> Exits the application
 ============================================================
 
-# For futher documentation please refer to Documentation.txt
+## For futher documentation please refer to Documentation.txt
 
-# Link to video: https://easyupload.io/g1s35q
+## Link to video: https://easyupload.io/g1s35q
