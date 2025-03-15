@@ -1,4 +1,3 @@
-Command Pattern and Plugins Homework 5 Requirements Mapping
 # Advanced Python Calculator
 
 ## Overview
