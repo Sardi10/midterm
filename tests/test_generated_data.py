@@ -1,3 +1,4 @@
+"""Module providing a function python version."""
 # tests/test_generated_data.py
 def test_generated_records(fake_records):
     """

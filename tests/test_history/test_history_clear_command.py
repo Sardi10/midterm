@@ -1,3 +1,4 @@
+"""Module providing a function python version."""
 # tests/test_history_clear_command.py
 import pytest
 from app.commands.history.history_clear_command import HistoryClearCommand
